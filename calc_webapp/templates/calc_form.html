@@ -1,8 +1,12 @@
 <html>
+
+    <head>
+        <title>Web Calculator</title>
+
 <script>
 window['_fs_debug'] = false;
 window['_fs_host'] = 'fullstory.com';
-window['_fs_org'] = 'G0JHD';
+window['_fs_org'] = 'G794B';
 window['_fs_namespace'] = 'FS';
 (function(m,n,e,t,l,o,g,y){
     if (e in m) {if(m.console && m.console.log) { m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].');} return;}
@@ -17,8 +21,13 @@ window['_fs_namespace'] = 'FS';
 })(window,document,window['_fs_namespace'],'script','user');
 </script>
 
-    <head>
-        <title>Web Calculator</title>
+<script>
+
+FS.identify('{{ identifier }}');
+
+</script>
+
+
     </head>
 
 <body>
@@ -26,6 +35,10 @@ window['_fs_namespace'] = 'FS';
 <h1>Enter values and operator</h1>
 
 <form action="/calc" method="POST">
+    Your name: <input type="text" name="name" value="First Last">
+    <br>
+    Email: <input type="text" name="email" value="Your email">
+    <br>
     First operand: <input type="text" name="operand1">
     <br>
     Second operand: <input type="text" name="operand2">

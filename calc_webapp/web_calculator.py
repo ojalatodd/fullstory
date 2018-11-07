@@ -9,14 +9,20 @@ November 5, 2018
 from flask import Flask
 from flask import render_template
 from flask import request
+import random
 
 
 app = Flask(__name__)
 
 
+
 @app.route("/")
 def test():
-    return "The calculator app is online. Please go to endpoint /calc"
+
+    alert="Hello!"
+
+#    return "The calculator app is online. Please go to endpoint /calc"
+    return render_template("test.html", alert=alert)
 
 
 @app.route("/calc", methods=['POST', 'GET'])
@@ -26,6 +32,12 @@ def calc():
        operand1 = int(request.form['operand1'])
        operand2 = int(request.form['operand2'])
        operator = request.form['operator']
+     
+       user_name = request.form['name']
+       #user_name = "John Donovan"
+       user_email = request.form['email']
+       #user_email = "jd@super.com"
+       #identifier = random.randint(1,9999)
 
        # Calculate the result!
        
@@ -48,10 +60,12 @@ def calc():
 
        result_string = '{} {} {} = {}'.format(operand1, operator, operand2, result)
 
-       return render_template("index.html", result_string=result_string)
+       #return render_template("index.html", result_string=result_string, user_name="Jack", user_email="jack@blah.com")
+       return render_template("index.html", result_string=result_string, display_name=user_name, user_email=user_email)
     
    else:
-        return render_template("calc_form.html")
+        identifier = random.randint(1,9999)
+        return render_template("calc_form.html", identifier=identifier)
 
 
 
