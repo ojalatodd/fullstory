@@ -13,12 +13,14 @@ from flask import request
 import json
 import logging
 import requests
+from requests.auth import HTTPBasicAuth
 
 app = Flask(__name__)
 
 logger = logging.getLogger()
 
 GITHUB_URL = "https://api.github.com/repos/ojalatodd/fullstory/issues"
+FULLSTORY_URL = "https://www.fullstory.com/api/v1/sessions"
 
 def get_url(url):
     response = requests.get(url)
@@ -52,32 +54,33 @@ def index():
 
     #Display all the issues associated with the Web Calculate app
 
-    data = get_url(url=GITHUB_URL)
+    github_data = get_url(url=GITHUB_URL)
     #Get the parts of the data that we want:
     
-    no_issues = len(data)
-    print("There are {} issues".format(no_issues))
+    nu_issues = len(github_data)
 
-    results_string = ""
-    count = 1
-    for i in data:
-        results_string += "Issue number " + str(count) + ": "
-        title = i['title']
-        results_string += title + ", "
-        username = i['user']['login']
-        results_string += "Username: " + username + ", "
-        issue_url = i['url']
-        results_string += "URL to issue: " + issue_url + ", "
-        
-        # Get the link to the fullstory session for this user
-        fullstory_session_link = "http://blah.com"
-        
-        results_string += "Fullstory session link for user: " + fullstory_session_link + " *** "
+    # Create a session with auth
+    s = requests.Session()
+    s.headers.update({'Authorization': 'Basic Rzc5NEI6UnpjNU5FSTZRVVZDYjJaSllUWmFlVlEwT0hwR2JYZFdhVWhPTm5aNmRtUkdRMEpGYkRSRllXRnBVeXM0V1M4NVRUMD0='})
+    issues = []  # Initialize the list that holds all the issues
 
-    
-    
-    #return("Welcome to the great new web app!")
-    return render_template("index.html", no_issues=no_issues, results_string=results_string)
+    for i in github_data:
+
+        # To-do: Get the user's email from github with the user endpoint,
+        # then use that to pull the Fullstory session data
+
+        # Get the Fullstory session data for this user based on email.
+        sess_data = s.get(FULLSTORY_URL, params={'email':'todd@toddojala.com'}).json()
+        
+        # Get the link to the session
+        first_session = sess_data.pop() # Only get first session in this beta version
+        sess_link = first_session['FsUrl']
+        print(sess_link)
+        issue={'title':i['title'], 'username':i['user']['login'], 'url':i['html_url'], 'session_link':sess_link}
+        issues.append(issue)
+
+    #issues = [{'title':'Title 1'}]   
+    return render_template("index.html", nu_issues=nu_issues, issues=issues)
 
 
 

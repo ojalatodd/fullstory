@@ -5,11 +5,23 @@
 
 <body>
 <h2>Open Issues and Associated Fullstory Sessions</h2>
-There are {{ no_issues }} open issues.
+<p> This page list open issues for the Online Web Calculator app by Todd Ojala<p>
+<br>
+There are {{ nu_issues }} open issues.
 <br>
 
 Results: <br>
-{{ results_string }}
+
+<ul>
+{% for issue in issues %}
+  <li>Title: {{ issue.title }}</li>
+  <li>Username: {{ issue.username }}</li>
+  <li><a href="{{ issue.url }}">{{ issue.url }}</a></li>
+  <li><a href="{{ issue.session_link }}">Link to session in Fullstory</a></li>
+  <br>
+{% endfor %}
+</ul>
+
 </body>
 
 </html>

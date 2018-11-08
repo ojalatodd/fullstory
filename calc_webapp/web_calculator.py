@@ -60,7 +60,6 @@ def calc():
 
        result_string = '{} {} {} = {}'.format(operand1, operator, operand2, result)
 
-       #return render_template("index.html", result_string=result_string, user_name="Jack", user_email="jack@blah.com")
        return render_template("index.html", result_string=result_string, display_name=user_name, user_email=user_email)
     
    else:
