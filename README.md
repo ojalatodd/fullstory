@@ -5,8 +5,18 @@ Two apps created for a tech challange from Fullstory:
 1. Created web app that acts as a simple calculator. This app utlizes Fullstory to capture user 
 behavior and data.
 
+This web app is currently available at this URL:
+http://159.89.130.143:5000/calc
+
+Also: http://toddojala.com:5000/calc
+
 2. Created a web app that uses both the gitub and Fullstory REST APIs to do something "useful or
 interesting." 
+
+This web app is currently available at this URL:
+http://159.89.130.143:8080/webapp
+
+Also: http://toddojala.com:8080/webapp
 
 The app gets a list of issues submitted against the Calculator web app, and links it to any 
 Fullstory sessions captured for that Github user, if the user exists.
