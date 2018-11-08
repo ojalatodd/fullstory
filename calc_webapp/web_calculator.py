@@ -2,7 +2,16 @@
 This is a simple web-based calculator
 Let's users enter two numbers and choose the operator.
 
+Usage: 
+python web_calculator.py
+
+If python doesn't link to python3, use:
+python3 web_calculator.py
+
+Runs on port 5000
+
 November 5, 2018
+Doc string updated November 8, 2018
 '''
 
 
@@ -13,7 +22,6 @@ import random
 
 
 app = Flask(__name__)
-
 
 
 @app.route("/")
@@ -34,14 +42,9 @@ def calc():
        operator = request.form['operator']
      
        user_name = request.form['name']
-       #user_name = "John Donovan"
        user_email = request.form['email']
-       #user_email = "jd@super.com"
-       #identifier = random.randint(1,9999)
 
        # Calculate the result!
-       
-       # Addition
        if operator == "+":
            result = operand1 + operand2
 

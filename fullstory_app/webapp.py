@@ -2,7 +2,23 @@
 This app displays a list of github issues that have been raised
 by users who also have captured Fullstory sessions!
 
+Usage: 
+python webapp.py 
+
+If python doesn't link to python version 3.x, use:
+python3 webapp.py
+
+Runs on port: 8080
+
+Password for github user: 
+The password for the github user that owns the web app being tracked is
+stored in a text file in the same directory as the app named password.txt
+
 November 7, 2018
+Updated version: November 8, 2018
+
+Copyright Todd Ojala, 2018
+
 '''
 
 
@@ -19,8 +35,15 @@ app = Flask(__name__)
 
 logger = logging.getLogger()
 
-GITHUB_URL = "https://api.github.com/repos/ojalatodd/fullstory/issues"
+GITHUB_ISSUES = "https://api.github.com/repos/ojalatodd/fullstory/issues" 
 FULLSTORY_URL = "https://www.fullstory.com/api/v1/sessions"
+
+GITHUB_USER_EMAILS = "https://api.github.com/user/emails"
+
+# Retrieve password for github account
+file = open('password.txt')
+passwd = file.read().strip()
+
 
 def get_url(url):
     response = requests.get(url)
@@ -51,35 +74,44 @@ def test():
 
 @app.route("/webapp", methods=['POST', 'GET'])
 def index():
+    '''
+    Display all the issues associated with the Web Calculate app
+    Then display the links to Fullstory sessions associated with 
+    the github users who submitted the issue, if they exist.
 
-    #Display all the issues associated with the Web Calculate app
+    '''
 
-    github_data = get_url(url=GITHUB_URL)
-    #Get the parts of the data that we want:
-    
+    github_data = get_url(url=GITHUB_ISSUES)
     nu_issues = len(github_data)
 
-    # Create a session with auth
+    # Create a session with auth using special Fullstory authentication
     s = requests.Session()
     s.headers.update({'Authorization': 'Basic Rzc5NEI6UnpjNU5FSTZRVVZDYjJaSllUWmFlVlEwT0hwR2JYZFdhVWhPTm5aNmRtUkdRMEpGYkRSRllXRnBVeXM0V1M4NVRUMD0='})
+
+    # Create a session with basic user/password auth for github
+    s2 = requests.Session()
+    s2.auth = ('ojalatodd', passwd)
+
     issues = []  # Initialize the list that holds all the issues
 
     for i in github_data:
-
-        # To-do: Get the user's email from github with the user endpoint,
-        # then use that to pull the Fullstory session data
+        
+        # Get the email to use for retrieving Fullstory sessions
+        email_data = s2.get(GITHUB_USER_EMAILS).json()
+        email = email_data.pop(0)['email']
 
         # Get the Fullstory session data for this user based on email.
-        sess_data = s.get(FULLSTORY_URL, params={'email':'todd@toddojala.com'}).json()
+        sess_data = s.get(FULLSTORY_URL, params={'email':email}).json()
         
         # Get the link to the session
-        first_session = sess_data.pop() # Only get first session in this beta version
+        first_session = sess_data.pop() # Only get last session in this beta version
         sess_link = first_session['FsUrl']
         print(sess_link)
+
+        # Construct a dict that stores the data we want to display on the web page
         issue={'title':i['title'], 'username':i['user']['login'], 'url':i['html_url'], 'session_link':sess_link}
         issues.append(issue)
 
-    #issues = [{'title':'Title 1'}]   
     return render_template("index.html", nu_issues=nu_issues, issues=issues)
 
 
